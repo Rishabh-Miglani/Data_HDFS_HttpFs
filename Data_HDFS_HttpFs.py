@@ -2,6 +2,8 @@ from flask import Flask
 from flask import request
 import requests
 import pandas as pd
+#import parquet
+import json
 
 from avro import schema, datafile, io
 import pprint
@@ -41,7 +43,7 @@ def data_access_dir():
 
 @app.route('/data_binary_avro')
 def data_access_dir_binary_avro():
-    dir_location= request.args.get('Data_dir_avro')
+    dir_location= request.args.get('datadir_avro')
     print dir_location
     dir_url=base_url + dir_location + '?user.name=hdfs&op=OPEN'
     r=requests.get(dir_url,stream=True)
@@ -80,6 +82,35 @@ def data_access_dir_binary_avro():
     # print temp_df
     ####READ te avro file from the location genrated above#####
 
+# @app.route('/data_binary_parquet')
+# def data_access_dir_binary_parquet():
+#     dir_location= request.args.get('Data_dir_parquet')
+#     print dir_location
+#     dir_url=base_url + dir_location + '?user.name=hdfs&op=OPEN'
+#     r=requests.get(dir_url,stream=True)
+#     print r.status_code
+#
+#     with open('p.parquet','wb') as fo:
+#         for chunk in r:
+#             fo.write(chunk)
+#
+#     fo.close()
+#     print "created"
+#
+#     OUTFILE_NAME = 'p.parquet'
+#
+#     mydata=[]
+#     with open(OUTFILE_NAME) as fo:
+#         for row in parquet.DictReader(fo):
+#             mydata.append(record)
+#
+#     # Read all records stored inside
+#
+#
+#     de=pd.DataFrame(mydata)
+#     #r=requests.get(dir_url)
+#
+#     return de.to_html()
 
 
 
