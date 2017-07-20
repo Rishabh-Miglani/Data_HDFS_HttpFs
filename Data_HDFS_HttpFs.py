@@ -22,7 +22,7 @@ def hello_world():
 
 @app.route('/data_flat')
 def data_access_dir():
-    dir_location= request.args.get('Datapath')
+    dir_location= request.args.get('flatfile')
     dir_url=base_url + dir_location + '?user.name=hdfs&op=OPEN'
     r=requests.get(dir_url)
     #print dir_url
