@@ -6,7 +6,7 @@
 </head>
 <body>
 <center>
-<form action='http://127.0.0.1:5000/data' method="get">
+<form action='http://127.0.0.1:5000/data_flat' method="get">
     Datadir:<input type="text" name="Datapath">
     <input type="submit" value="GetData">
     <br>
@@ -15,6 +15,12 @@
     <input type="submit" value="Validate">
     <input type="submit" value="execute">
 </form>
+
+    <form action='http://127.0.0.1:5000/data_binary_avro' method="get">
+        Datadir_avro:<input type="text" name="Data_dir_avro">
+        <input type="submit" value="Avrodata">
+    </form>
+
 </center>
 </body>
 </html>

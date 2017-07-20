@@ -3,6 +3,9 @@ from flask import request
 import requests
 import pandas as pd
 
+from avro import schema, datafile, io
+import pprint
+
 
 app = Flask(__name__)
 
@@ -15,7 +18,7 @@ def hello_world():
     return 'Hello World!'
 
 
-@app.route('/data')
+@app.route('/data_flat')
 def data_access_dir():
     dir_location= request.args.get('Datapath')
     dir_url=base_url + dir_location + '?user.name=hdfs&op=OPEN'
@@ -34,6 +37,51 @@ def data_access_dir():
     #print df_temp
     #df_temp=pd.DataFrame(r.content.split(','))
     return  temp_df.to_html()
+
+
+@app.route('/data_binary_avro')
+def data_access_dir_binary_avro():
+    dir_location= request.args.get('Data_dir_avro')
+    print dir_location
+    dir_url=base_url + dir_location + '?user.name=hdfs&op=OPEN'
+    r=requests.get(dir_url,stream=True)
+    print r.status_code
+
+    with open('p.avro','wb') as fo:
+        for chunk in r:
+            fo.write(chunk)
+
+    fo.close()
+    print "created"
+
+    OUTFILE_NAME = 'p.avro'
+
+    rec_reader = io.DatumReader()
+    df_reader = datafile.DataFileReader(open(OUTFILE_NAME,'rb'),rec_reader)
+# Read all records stored inside
+    mydata=[]
+    for record in df_reader:
+        mydata.append(record)
+
+    de=pd.DataFrame(mydata)
+    #r=requests.get(dir_url)
+
+    return de.to_html()
+
+
+    #print dir_url
+    # temp=r.content.split('\n')
+    # arr=[]
+    # for line in temp:
+    #     row=line.split(',')
+    #     arr.append(row)
+    # print type(arr)
+    # temp_df=pd.DataFrame(arr)
+    # print temp_df
+    ####READ te avro file from the location genrated above#####
+
+
+
 
 
 if __name__ == '__main__':
